@@ -1,6 +1,8 @@
 import React from 'react'
+import Delete from './component/Delete';
 
 const page = async ({ params }) => {
+
 
   const {id} = await params;
   console.log(id);
@@ -76,9 +78,9 @@ const page = async ({ params }) => {
             <div className='bg-white w-20 rounded-2xl h-10 text-[20px] cursor-pointer flex items-center justify-center'>
                 <button className='cursor-pointer'>Edit</button>
             </div>
-            <div  className='bg-white w-20 rounded-2xl h-10 text-[20px]  cursor-pointer flex items-center justify-center'>
-                <button className='cursor-pointer'>Delete</button>
-            </div>
+
+            <Delete id = {id} />
+           
         </div> 
     </div>
 </div>
