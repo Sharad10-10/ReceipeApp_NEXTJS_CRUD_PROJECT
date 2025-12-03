@@ -9,7 +9,7 @@ const Card = ({receipeData}) => {
 
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col h-110">
      <Link href={`/${receipeData?.id}`}>
 
          <div
@@ -26,10 +26,8 @@ const Card = ({receipeData}) => {
           <p className="text-gray-700 text-base">
             {receipeData?.description}
           </p>
-          <br></br>
-         
         </div>
-        <div className="px-6 pt-4 pb-2">
+        <div className="px-6 py-4">
           <span className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
             {formattedDate}
           </span>
@@ -40,7 +38,7 @@ const Card = ({receipeData}) => {
      </Link>
 
       <Link
-            href="/1/edit"
+            href={`/${receipeData.id}/edit`}
             className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 border border-blue-700 rounded text-center"
           >
             Edit

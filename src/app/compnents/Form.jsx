@@ -1,15 +1,19 @@
 "use client"
 import React, { useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 
-const Form = () => {
+const Form = ( {buttonText, initialData = null , id = null} ) => {
 
+
+    const pathName = usePathname()
     const router = useRouter();
 
+    const isEditMode = pathName.includes("/edit") || id !== null
+
      const [formData, setFormData] = useState({
-            name: "",
-            subname: "",
-            description: ""
+            name: initialData?.name || "",
+            subname: initialData?.subname || "",
+            description: initialData?.description || ""
         })
 
     const handleInput= (e)=> {
@@ -21,33 +25,47 @@ const Form = () => {
         })
     }
 
-    const handleSubmit = async(e)=> {
+     const handleSubmit = async(e)=> {
         e.preventDefault()
 
-      try{
-          const response = await fetch("http://localhost:3000/api/receipe", 
-            {
-                method: "POST",
-                headers: {
-                    "Content-Type" : "application/json"
-                },
-                body: JSON.stringify(formData)
+        try {
+
+            if(isEditMode) {
+                const response = await fetch(`http://localhost:3000/api/receipe/${id}`,
+                    {
+                        method : "PUT",
+                        headers: {
+                            "CONTENT-Type" : "application/json"
+                        },
+                        body: JSON.stringify(formData)
+                    }
+                )
+                if(!response.ok) {
+                    throw new Error("Failed to update post")
+                }
+                router.push(`/${id}`)
             }
-        )
-
-        if(!response.ok){
-            throw new Error("Error while submitting data")
+            else 
+                {
+                const response = await fetch("http://localhost:3000/api/receipe", {
+                    method: "POST",
+                    headers : {
+                        "Content-Type" : "application/json"
+                    },
+                    body : JSON.stringify(formData)
+                })
+                if(!response.ok) {
+                    throw new Error("Failed to create post")
+                }
+                router.push(`/`)
+            }
         }
-        alert("Your post has been created successfully")
-        router.push("./")
-        
-      }
-
-      catch(error) {
-        console.log(error);
-      }
+        catch (error) {
+            console.log(error);
+        }
     }
 
+    
 
   return (
     <div>
@@ -56,12 +74,8 @@ const Form = () => {
 
     <div className="flex items-start justify-between p-5 border-b rounded-t">
         <h3 className="text-xl font-semibold">
-            Edit product
+            {buttonText}
         </h3>
-        <button type="button" className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center" data-modal-toggle="product-modal">
-           {/* <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"> */}
-           {/* <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg> */}
-        </button>
     </div>
 
     <div className="p-6 space-y-6">
@@ -85,7 +99,7 @@ const Form = () => {
                 </div>
 
                 <div className="p-6 border-t border-gray-200 rounded-b">
-                    <button className="text-white bg-cyan-600 hover:bg-cyan-700 focus:ring-4 focus:ring-cyan-200 font-medium rounded-lg text-sm px-5 py-2.5 text-center cursor-pointer" type="submit">Create a Post</button>
+                    <button className="text-white bg-cyan-600 hover:bg-cyan-700 focus:ring-4 focus:ring-cyan-200 font-medium rounded-lg text-sm px-5 py-2.5 text-center cursor-pointer" type="submit">{buttonText}</button>
                 </div>
             </div>
                 
@@ -103,3 +117,6 @@ const Form = () => {
 }
 
 export default Form
+
+
+

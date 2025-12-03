@@ -21,13 +21,23 @@ const page = async ({ params }) => {
 
   catch (error){
     console.log(error);
-    return null;
   }
    }
 
-   const {data} = await fetchData()
-   console.log(data[0].name);
-   const cleanedData = data[0]
+//    const {data} = await fetchData()
+//    console.log(data[0].name);
+   const result = await fetchData()
+
+   if (!result || !result.data || result.data.length === 0) {
+    return (
+      <div className="max-w-6xl mx-auto px-4 py-8">
+        <p className="text-red-500">Failed to load recipe data</p>
+      </div>
+    )
+  }
+
+
+   const cleanedData = result.data[0]
    console.log(cleanedData);
 
    const date = new Date(cleanedData.createdAt)

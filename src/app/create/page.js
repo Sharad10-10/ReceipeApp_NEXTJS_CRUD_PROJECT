@@ -2,10 +2,11 @@ import React from 'react'
 import Form from '../compnents/Form'
 
 const create = () => {
+
   return (
     <div>
 
-        <Form />
+        <Form buttonText = {"Create a Post"} />
 
     </div>
   )
